@@ -8,6 +8,7 @@ import com.adsmanager.applovin.ApplovinDiscoveryAds
 import com.adsmanager.applovin.ApplovinMaxAds
 import com.adsmanager.core.CallbackAds
 import com.adsmanager.core.IRewards
+import com.adsmanager.core.NetworkAds
 import com.adsmanager.core.iadsmanager.IInitialize
 import com.adsmanager.core.iadsmanager.SizeBanner
 import com.adsmanager.core.iadsmanager.SizeNative

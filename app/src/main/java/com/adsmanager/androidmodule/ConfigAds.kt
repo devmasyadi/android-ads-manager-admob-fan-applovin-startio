@@ -1,6 +1,7 @@
 package com.adsmanager.androidmodule
 
-import com.adsmanager.ads.NetworkAds
+import com.adsmanager.core.NetworkAds
+
 
 object ConfigAds {
 
