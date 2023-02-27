@@ -7,11 +7,11 @@ import com.adsmanager.admob.AdmobAds
 import com.adsmanager.applovin.ApplovinDiscoveryAds
 import com.adsmanager.applovin.ApplovinMaxAds
 import com.adsmanager.core.CallbackAds
-import com.adsmanager.core.IRewards
+import com.adsmanager.core.rewards.IRewards
 import com.adsmanager.core.NetworkAds
 import com.adsmanager.core.iadsmanager.IInitialize
-import com.adsmanager.core.iadsmanager.SizeBanner
-import com.adsmanager.core.iadsmanager.SizeNative
+import com.adsmanager.core.SizeBanner
+import com.adsmanager.core.SizeNative
 import com.adsmanager.fan.FanAds
 import com.adsmanager.startio.StartIoAds
 
@@ -30,10 +30,12 @@ class HandleAds(
     ) {
         when (networkAds) {
             NetworkAds.ADMOB -> admobAds.initialize(context, appId, iInitialize)
-            NetworkAds.FAN -> fanAds.initialize(context, iInitialize)
+            NetworkAds.FAN -> fanAds.initialize(context, appId, iInitialize)
             NetworkAds.APPLOVIN_MAX -> applovinMaxAds.initialize(context, appId, iInitialize)
             NetworkAds.APPLOVIN_DISCOVERY -> applovinDiscoveryAds.initialize(context, appId, iInitialize)
             NetworkAds.START_IO -> startIoAds.initialize(context, appId,iInitialize)
+            NetworkAds.UNITY_ADS -> {}
+            NetworkAds.NONE -> {}
         }
     }
 
@@ -47,6 +49,8 @@ class HandleAds(
                 testDevices
             )
             NetworkAds.START_IO -> startIoAds.setTestDevices(activity, testDevices)
+            NetworkAds.UNITY_ADS -> {}
+            NetworkAds.NONE -> {}
         }
     }
 
@@ -57,6 +61,8 @@ class HandleAds(
             NetworkAds.APPLOVIN_MAX -> applovinMaxAds.loadGdpr(activity, childDirected)
             NetworkAds.APPLOVIN_DISCOVERY -> applovinDiscoveryAds.loadGdpr(activity, childDirected)
             NetworkAds.START_IO -> startIoAds.loadGdpr(activity, childDirected)
+            NetworkAds.UNITY_ADS -> {}
+            NetworkAds.NONE -> {}
         }
     }
 
@@ -68,6 +74,10 @@ class HandleAds(
         adUnitId: String,
         callbackAds: CallbackAds?
     ) {
+        if(adUnitId.isEmpty()) {
+            callbackAds?.onAdFailedToLoad("adUnitId isEmpty")
+            return
+        }
         when (networkAds) {
             NetworkAds.ADMOB -> admobAds.showBanner(
                 activity,
@@ -104,6 +114,12 @@ class HandleAds(
                 adUnitId,
                 callbackAds
             )
+            NetworkAds.UNITY_ADS -> {
+                callbackAds?.onAdFailedToLoad("Ads None")
+            }
+            NetworkAds.NONE -> {
+                callbackAds?.onAdFailedToLoad("Ads None")
+            }
         }
     }
 
@@ -112,6 +128,9 @@ class HandleAds(
         networkAds: NetworkAds,
         adUnitId: String,
     ) {
+        if(adUnitId.isEmpty()) {
+            return
+        }
         when (networkAds) {
             NetworkAds.ADMOB -> admobAds.loadInterstitial(activity, adUnitId)
             NetworkAds.FAN -> fanAds.loadInterstitial(activity, adUnitId)
@@ -121,6 +140,8 @@ class HandleAds(
                 adUnitId
             )
             NetworkAds.START_IO -> startIoAds.loadInterstitial(activity, adUnitId)
+            NetworkAds.UNITY_ADS -> {}
+            NetworkAds.NONE -> {}
         }
     }
 
@@ -130,6 +151,10 @@ class HandleAds(
         adUnitId: String,
         callbackAds: CallbackAds?
     ) {
+        if(adUnitId.isEmpty()) {
+            callbackAds?.onAdFailedToLoad("adUnitId isEmpty")
+            return
+        }
         when (networkAds) {
             NetworkAds.ADMOB -> admobAds.showInterstitial(activity, adUnitId, callbackAds)
             NetworkAds.FAN -> fanAds.showInterstitial(activity, adUnitId, callbackAds)
@@ -144,6 +169,12 @@ class HandleAds(
                 callbackAds
             )
             NetworkAds.START_IO -> startIoAds.showInterstitial(activity, adUnitId, callbackAds)
+            NetworkAds.UNITY_ADS -> {
+                callbackAds?.onAdFailedToLoad("Ads None")
+            }
+            NetworkAds.NONE -> {
+                callbackAds?.onAdFailedToLoad("Ads None")
+            }
         }
     }
 
@@ -155,6 +186,10 @@ class HandleAds(
         adUnitId: String,
         callbackAds: CallbackAds?
     ) {
+        if(adUnitId.isEmpty()) {
+            callbackAds?.onAdFailedToLoad("adUnitId isEmpty")
+            return
+        }
         when (networkAds) {
             NetworkAds.ADMOB -> admobAds.showNativeAds(
                 activity,
@@ -191,6 +226,8 @@ class HandleAds(
                 adUnitId,
                 callbackAds
             )
+            NetworkAds.UNITY_ADS -> callbackAds?.onAdFailedToLoad("Ads None")
+            NetworkAds.NONE -> callbackAds?.onAdFailedToLoad("Ads None")
         }
     }
 
@@ -199,12 +236,17 @@ class HandleAds(
         networkAds: NetworkAds,
         adUnitId: String,
     ) {
+        if(adUnitId.isEmpty()) {
+            return
+        }
         when (networkAds) {
             NetworkAds.ADMOB -> admobAds.loadRewards(activity, adUnitId)
             NetworkAds.FAN -> fanAds.loadRewards(activity, adUnitId)
             NetworkAds.APPLOVIN_MAX -> applovinMaxAds.loadRewards(activity, adUnitId)
             NetworkAds.APPLOVIN_DISCOVERY -> applovinDiscoveryAds.loadRewards(activity, adUnitId)
             NetworkAds.START_IO -> startIoAds.loadRewards(activity, adUnitId)
+            NetworkAds.UNITY_ADS -> {}
+            NetworkAds.NONE -> {}
         }
     }
 
@@ -215,6 +257,10 @@ class HandleAds(
         callbackAds: CallbackAds?,
         iRewards: IRewards?
     ) {
+        if(adUnitId.isEmpty()) {
+            callbackAds?.onAdFailedToLoad("adUnitId isEmpty")
+            return
+        }
         when (networkAds) {
             NetworkAds.ADMOB -> admobAds.showRewards(activity, adUnitId, callbackAds, iRewards)
             NetworkAds.FAN -> fanAds.showRewards(activity, adUnitId, callbackAds, iRewards)
@@ -231,6 +277,8 @@ class HandleAds(
                 iRewards
             )
             NetworkAds.START_IO -> startIoAds.showRewards(activity, adUnitId, callbackAds, iRewards)
+            NetworkAds.UNITY_ADS -> {callbackAds?.onAdFailedToLoad("Ads None")}
+            NetworkAds.NONE -> callbackAds?.onAdFailedToLoad("Ads None")
         }
     }
 }

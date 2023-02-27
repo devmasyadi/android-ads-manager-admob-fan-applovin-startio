@@ -2,12 +2,14 @@ package com.adsmanager.ads
 
 import android.app.Activity
 import com.adsmanager.admob.AdmobOpenAd
+import com.adsmanager.applovin.ApplovinOpenAds
 import com.adsmanager.core.CallbackAds
 import com.adsmanager.core.CallbackOpenAd
 import com.adsmanager.core.NetworkAds
 
 class AdsManagerOpenAd(
-    private val admobOpenAd: AdmobOpenAd
+    private val admobOpenAd: AdmobOpenAd,
+    private val applovinOpenAd: ApplovinOpenAds
 ) {
 
     private var currentActivity: Activity? = null
@@ -156,8 +158,13 @@ class AdsManagerOpenAd(
         networkAds: NetworkAds,
         callbackAds: CallbackAds?
     ) {
+        if (adUnitId.isEmpty()) {
+            callbackAds?.onAdFailedToLoad("adUnit empty")
+            return
+        }
         when (networkAds) {
             NetworkAds.ADMOB -> admobOpenAd.loadAd(activity, adUnitId, callbackAds)
+            NetworkAds.APPLOVIN_MAX -> applovinOpenAd.loadAd(activity, adUnitId, callbackAds)
             else -> {
                 callbackAds?.onAdFailedToLoad("Open Ad ${networkAds.name} not available")
             }
@@ -170,10 +177,17 @@ class AdsManagerOpenAd(
         networkAds: NetworkAds,
         callbackOpenAd: CallbackOpenAd?
     ) {
+        if (adUnitId.isEmpty()) {
+            callbackOpenAd?.onAdFailedToLoad("adUnit empty")
+            return
+        }
         when (networkAds) {
             NetworkAds.ADMOB -> {
                 currentNetworkAds = networkAds
                 admobOpenAd.showAdIfAvailable(activity, adUnitId, callbackOpenAd)
+            }
+            NetworkAds.APPLOVIN_MAX -> {
+                applovinOpenAd.showAdIfAvailable(adUnitId, callbackOpenAd)
             }
             else -> {
                 callbackOpenAd?.onAdFailedToLoad("Open Ad ${networkAds.name} not available")
