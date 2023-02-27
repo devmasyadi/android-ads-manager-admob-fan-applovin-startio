@@ -20,6 +20,7 @@ val adsManagerModule = module {
     single { StartIoAds() }
     single { HandleAds(get(), get(), get(), get(), get()) }
     single { AdsManager(get()) }
+    single { AdmobOpenAd() }
     single { ApplovinOpenAds(get()) }
     single { AdsManagerOpenAd(get(), get()) }
 }
